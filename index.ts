@@ -8,10 +8,8 @@
  */
 
 import http from "http";
-import https from "https";
 import fs from "fs";
 import path from "path";
-import readline from "readline";
 import { ProxyAgent, setGlobalDispatcher } from "undici";
 
 // ─── 代理配置（按你本地工具修改端口）────────────────────────────────────────
