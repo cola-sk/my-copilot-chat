@@ -110,6 +110,7 @@ async function forwardToCopilot(copilotToken: string, body: any): Promise<any> {
   }
 
   // 支持流式响应
+  console.log(`📤 转发请求到 Copilot API (stream: ${body.stream ? "yes" : "no"})`);
   if (body.stream) return res;
   return res.json();
 }
@@ -134,6 +135,9 @@ function startServer(oauthToken: string) {
             headers: {
               Authorization: `Bearer ${copilotToken}`,
               "Copilot-Integration-Id": "vscode-chat",
+              "Editor-Version": "vscode/1.99.0",
+              "Editor-Plugin-Version": "copilot-chat/0.26.0",
+              "User-Agent": "GithubCopilot/1.155.0",
             },
           });
           const models = await modelsRes.json();
