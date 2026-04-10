@@ -222,6 +222,47 @@ npx tsc
 
 使用 VS Code 的 TypeScript 调试器或直接运行 `ts-node`。
 
+## 与 Hermes 接入
+
+[Hermes](https://github.com/your-repo/hermes) 是一个 AI Agent CLI 工具，通过以下配置可以将其模型后端代理到本地 Copilot 服务。
+
+### 前提条件
+
+确保本代理服务已启动并监听 `http://localhost:3001`：
+
+```bash
+npx ts-node index.ts
+```
+
+### 配置 `~/.hermes/config.yaml`
+
+在 Hermes 配置文件中添加 `custom_providers`，并将 `model.provider` 指向它：
+
+```yaml
+model:
+  default: grok-code-fast-1               # Copilot 侧的模型 ID，不含 provider 前缀
+  provider: cp_grok
+
+custom_providers:
+  - name: cp_grok
+    base_url: http://localhost:3001/v1
+    api_key: "sk-any-string"             # 占位符，随意填写
+```
+
+> **注意事项**
+> - `custom_providers` 必须是 **YAML 列表**（`-` 开头），不能写成 dict。
+> - `api_key` 必须加引号，值可以是任意字符串（本代理不校验 key）。
+> - `model.default` 填写 Copilot 支持的模型 ID，可通过 `GET http://localhost:3001/v1/models` 查询完整列表。
+
+### 验证
+
+```bash
+hermes doctor          # 检查配置是否有误
+hermes model           # 查看当前生效的模型
+```
+
+配置正确后，Hermes 的所有 AI 请求都会经由本地代理转发给 GitHub Copilot。
+
 ## 许可证
 
 MIT

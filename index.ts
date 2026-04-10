@@ -149,6 +149,7 @@ function startServer(oauthToken: string) {
         // POST /v1/chat/completions — 转发聊天请求
         if (req.method === "POST" && req.url === "/v1/chat/completions") {
           const parsed = JSON.parse(body);
+          console.log("📥 model:", parsed.model);
           const copilotToken = await getCopilotToken(oauthToken);
 
           if (parsed.stream) {
