@@ -272,3 +272,21 @@ MIT
 - ⚠️ Token 文件包含敏感授权信息，不要分享
 - ⚠️ 代理服务默认允许本地访问，不要暴露到互联网
 - ⚠️ API Key 仅作占位符，不支持真正的身份验证
+
+
+
+```
+这是因为 GET /v1/models 请求缺少必要的 header，导致服务端按集成 ID 过滤后只返回部分模型。具体原因有两点：
+
+1. Editor-Version 头太旧
+Grok 系列模型是较新加入 Copilot 的，vscode/1.95.0 这个版本声明可能低于服务端要求，导致新模型被过滤掉。
+
+2. /models 请求缺少 Editor-Plugin-Version 等 header
+/chat/completions 请求带了完整 header，但 /v1/models 那段只传了两个 header，模型可见性会不一致。
+
+建议把 /v1/models 的请求 header 对齐：
+
++ "Editor-Version": "vscode/1.99.0",
++ "Editor-Plugin-Version": "copilot-chat/0.26.0",
++ "User-Agent": "GithubCopilot/1.155.0",
+```
